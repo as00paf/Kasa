@@ -22,13 +22,12 @@ Using the plugin is very simple, just follow these easy steps:
 ![Screenshot 3](https://github.com/as00paf/Kasa/blob/master/screenshots/ps3.png "Screenshot 3")
 
 4. Right-click on Auto-Start and click on Add Macro...
-![Screenshot 4](https://github.com/as00paf/Kasa/blob/master/screenshots/ps4.png "Screenshot 4")
+![Screenshot 4](https://github.com/as00paf/Kasa/blob/master/screenshots/ps1.png "Screenshot 4")
 
 5. Select Kasa Plugin>Authenticate
 ![Screenshot 5](https://github.com/as00paf/Kasa/blob/master/screenshots/ps5.png "Screenshot 5")
 
 6. Repeat steps 4 and 5 with the macro Get Device List
-![Screenshot 6](https://github.com/as00paf/Kasa/blob/master/screenshots/ps6.png "Screenshot 6")
 
 7. Add a new folder to your configuration tree called Kasa and right-click on it to add a new macro
 ![Screenshot 7](https://github.com/as00paf/Kasa/blob/master/screenshots/ps7.png "Screenshot 7")
