@@ -32,7 +32,7 @@ Using the plugin is very simple, just follow these easy steps:
 
 ![Screenshot 5](https://github.com/as00paf/Kasa/blob/master/screenshots/ps5.png "Screenshot 5")
 
-6. Repeat steps 4 and 5 with the macro Get Device List
+6. Repeat steps 4 and 5 with the macro Get Device List and run both of them in order
 
 7. Add a new folder to your configuration tree called Kasa and right-click on it to add a new macro
 
