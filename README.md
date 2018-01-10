@@ -26,7 +26,7 @@ Using the plugin is very simple, just follow these easy steps:
 
 4. Right-click on Auto-Start and click on Add Macro...
 
-![Screenshot 4](https://github.com/as00paf/Kasa/blob/master/screenshots/ps1.png "Screenshot 4")
+![Screenshot 4](https://github.com/as00paf/Kasa/blob/master/screenshots/ps4.png "Screenshot 4")
 
 5. Select Kasa Plugin>Authenticate
 
@@ -36,7 +36,7 @@ Using the plugin is very simple, just follow these easy steps:
 
 7. Add a new folder to your configuration tree called Kasa and right-click on it to add a new macro
 
-![Screenshot 7](https://github.com/as00paf/Kasa/blob/master/screenshots/ps1.png "Screenshot 7")
+![Screenshot 7](https://github.com/as00paf/Kasa/blob/master/screenshots/ps4.png "Screenshot 7")
 
 8. Select Toggle Device State
 
