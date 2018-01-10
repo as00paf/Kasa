@@ -36,12 +36,12 @@ Using the plugin is very simple, just follow these easy steps:
 
 7. Add a new folder to your configuration tree called Kasa and right-click on it to add a new macro
 
-![Screenshot 7](https://github.com/as00paf/Kasa/blob/master/screenshots/ps7.png "Screenshot 7")
+![Screenshot 7](https://github.com/as00paf/Kasa/blob/master/screenshots/ps6.png "Screenshot 7")
 
 8. Select Toggle Device State
 
-![Screenshot 8](https://github.com/as00paf/Kasa/blob/master/screenshots/ps8.png "Screenshot 8")
+![Screenshot 8](https://github.com/as00paf/Kasa/blob/master/screenshots/ps7.png "Screenshot 8")
 
 9. Select the device you want to control and the state you want to set and click OK
 
-![Screenshot 9](https://github.com/as00paf/Kasa/blob/master/screenshots/ps9.png "Screenshot 9")
+![Screenshot 9](https://github.com/as00paf/Kasa/blob/master/screenshots/ps8.png "Screenshot 9")
