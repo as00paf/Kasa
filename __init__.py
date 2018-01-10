@@ -43,7 +43,6 @@ class Authenticate(eg.ActionBase):
 	self.headers = {'Content-type': 'application/json', 'Accept': 'text/plain'}
 	
 	self.r = requests.post(self.url, data=json.dumps(self.data), headers=self.headers, verify=False)
-	print(self.r.text)
 	self.plugin.token = json.loads(self.r.text)['result']['token']
 		
 
@@ -69,7 +68,6 @@ class GetDeviceList(eg.ActionBase):
 		device = Device(device['deviceId'], device['alias'], mac, device['appServerUrl'])
 		self.plugin.devices.append(device)
 		self.plugin.deviceAlias.append(device.alias)
-		print(device.toString())
 
 class ToggleDeviceState(eg.ActionBase):
     name = "Toggle Device State"
