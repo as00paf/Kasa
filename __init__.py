@@ -74,8 +74,8 @@ class GetDeviceList(eg.ActionBase):
         except AttributeError:
             eg.PrintError("Something went wrong. Please make sure you called Authenticate!")
 
-class ToggleDeviceState(eg.ActionBase):
-    name = "Toggle Device State"
+class SetDeviceState(eg.ActionBase):
+    name = "Sets Device State"
     description ="Change device state to ON or OFF"
     
     def __call__(self, deviceIndex, state):
@@ -96,7 +96,6 @@ class ToggleDeviceState(eg.ActionBase):
         try:
             panel = eg.ConfigPanel()
             device = self.plugin.devices[deviceIndex]
-            print("Getting device " + device.alias )
            
             self.label1 = wx.StaticText(panel,label = "Select Device" ,style = wx.ALIGN_LEFT) 
             panel.sizer.Add(self.label1, 0 , wx.ALIGN_LEFT)
@@ -117,6 +116,53 @@ class ToggleDeviceState(eg.ActionBase):
                 panel.SetResult(deviceIndex, state)
         except AttributeError:
             eg.PrintError("Something went wrong. Please make sure you called Authenticate and Get Device List!")
+
+class ToggleDeviceState(eg.ActionBase):
+    name = "Toggle Device State"
+    description ="Toggles the device state"
+    
+    def __call__(self, deviceIndex):
+        print("Changing device state...")
+        try:
+            device = self.plugin.devices[deviceIndex]
+            
+            #Get current state
+            url = device.url + "?token=" + self.plugin.token            
+            data = {"method":"passthrough", "params": {"deviceId": device.id, "requestData": "{\"system\":{\"get_sysinfo\":null},\"emeter\":{\"get_realtime\":null}}" }}
+            headers = {'Content-type': 'application/json', 'Accept': 'text/plain'}
+            r = requests.post(url, data=json.dumps(data), headers=headers, verify=False)
+            response = json.loads(r.text)['result']['responseData']
+            currentState = json.loads(response)["system"]['get_sysinfo']['relay_state']
+            if(currentState == 1):
+                newState = "0"
+                print "Will turn " + device.alias + " off"
+            else:
+                newState = "1"
+                print "Will turn " + device.alias + " on"
+            
+            #Toggle
+            data = {"method":"passthrough", "params": {"deviceId": device.id, "requestData": "{\"system\":{\"set_relay_state\":{\"state\":" + newState + "}}}" }}
+            #Get device list
+            r = requests.post(url, data=json.dumps(data), headers=headers, verify=False)
+        except AttributeError:
+            eg.PrintError("Something went wrong. Please make sure you called Authenticate and Get Device List!")
+        
+    def Configure(self, deviceIndex=-1):
+        try:
+            panel = eg.ConfigPanel()
+            device = self.plugin.devices[deviceIndex]
+           
+            self.label1 = wx.StaticText(panel,label = "Select Device" ,style = wx.ALIGN_LEFT) 
+            panel.sizer.Add(self.label1, 0 , wx.ALIGN_LEFT)
+            
+            self.deviceCombo = wx.ComboBox(panel, -1, size=(150, -1), value=device.alias,choices=self.plugin.deviceAlias)
+            panel.sizer.Add(self.deviceCombo, 0, wx.ALIGN_CENTER_VERTICAL)
+            
+            while panel.Affirmed():
+                deviceIndex = self.deviceCombo.GetCurrentSelection()
+                panel.SetResult(deviceIndex)
+        except AttributeError:
+            eg.PrintError("Something went wrong. Please make sure you called Authenticate and Get Device List!")
         
 def getDeviceFromAliasIndex(self, index):   
     return self.plugin.devices[index]
@@ -126,6 +172,7 @@ class KasaPlugin(eg.PluginBase):
 	  print "Kasa Plugin is inited."
 	  self.AddAction(Authenticate)
 	  self.AddAction(GetDeviceList)
+	  self.AddAction(SetDeviceState)
 	  self.AddAction(ToggleDeviceState)
 	  #self.AddAction(ToggleLocalDeviceState)
 
