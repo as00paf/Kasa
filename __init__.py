@@ -5,7 +5,7 @@ import json
 eg.RegisterPlugin(
     name = "Kasa Plugin",
     author = "Alexandre Fournier",
-    version = "0.0.1",
+    version = "0.2.0",
     kind = "other",
     description = "This is a plugin to control TP-Link devices like the Kasa app",
     createMacrosOnAdd = True,
@@ -74,8 +74,57 @@ class GetDeviceList(eg.ActionBase):
         except AttributeError:
             eg.PrintError("Something went wrong. Please make sure you called Authenticate!")
 
+class GetDeviceState(eg.ActionBase):
+    name = "Get Device State"
+    description ="Retrieves the state of the device (ON or OFF)"
+        
+    def __call__(self, deviceIndex):
+        print("Retrieving device state...")
+        try:
+            device = self.plugin.devices[deviceIndex]
+            
+            #Get current state
+            url = device.url + "?token=" + self.plugin.token            
+            data = {"method":"passthrough", "params": {"deviceId": device.id, "requestData": "{\"system\":{\"get_sysinfo\":null},\"emeter\":{\"get_realtime\":null}}" }}
+            headers = {'Content-type': 'application/json', 'Accept': 'text/plain'}
+            r = requests.post(url, data=json.dumps(data), headers=headers, verify=False)
+            response = json.loads(r.text)['result']['responseData']
+            currentState = json.loads(response)["system"]['get_sysinfo']['relay_state']
+            if(currentState == 0):
+                state = "OFF"
+            else:
+                state = "ON"
+            
+            print "State is " + state
+            
+            #Dispatch Event
+            self.plugin.TriggerEvent("DeviceStateEvent", state)            
+        except AttributeError as attrErr:
+            eg.PrintError("Something went wrong. Please make sure you called Authenticate and Get Device List! Error ")
+            eg.PrintError(attrErr)
+        except KeyError as keyErr:
+            eg.PrintError("Something went wrong. Error ")
+            eg.PrintError(keyErr)
+        
+    def Configure(self, deviceIndex=0):
+        try:
+            panel = eg.ConfigPanel()
+            device = self.plugin.devices[deviceIndex]
+           
+            self.label1 = wx.StaticText(panel,label = "Select Device" ,style = wx.ALIGN_LEFT) 
+            panel.sizer.Add(self.label1, 0 , wx.ALIGN_LEFT)
+            
+            self.deviceCombo = wx.ComboBox(panel, -1, size=(150, -1), value=device.alias,choices=self.plugin.deviceAlias)
+            panel.sizer.Add(self.deviceCombo, 0, wx.ALIGN_CENTER_VERTICAL)
+            
+            while panel.Affirmed():
+                deviceIndex = self.deviceCombo.GetCurrentSelection()
+                panel.SetResult(deviceIndex)
+        except AttributeError:
+            eg.PrintError("Something went wrong. Please make sure you called Authenticate and Get Device List!")
+            
 class SetDeviceState(eg.ActionBase):
-    name = "Sets Device State"
+    name = "Set Device State"
     description ="Change device state to ON or OFF"
     
     def __call__(self, deviceIndex, state):
@@ -92,7 +141,7 @@ class SetDeviceState(eg.ActionBase):
         except AttributeError:
             eg.PrintError("Something went wrong. Please make sure you called Authenticate and Get Device List!")
         
-    def Configure(self, deviceIndex=-1, state = 0):
+    def Configure(self, deviceIndex = 0, state = 0):
         try:
             panel = eg.ConfigPanel()
             device = self.plugin.devices[deviceIndex]
@@ -147,7 +196,7 @@ class ToggleDeviceState(eg.ActionBase):
         except AttributeError:
             eg.PrintError("Something went wrong. Please make sure you called Authenticate and Get Device List!")
         
-    def Configure(self, deviceIndex=-1):
+    def Configure(self, deviceIndex = 0):
         try:
             panel = eg.ConfigPanel()
             device = self.plugin.devices[deviceIndex]
@@ -172,6 +221,7 @@ class KasaPlugin(eg.PluginBase):
 	  print "Kasa Plugin is inited."
 	  self.AddAction(Authenticate)
 	  self.AddAction(GetDeviceList)
+	  self.AddAction(GetDeviceState)
 	  self.AddAction(SetDeviceState)
 	  self.AddAction(ToggleDeviceState)
 	  #self.AddAction(ToggleLocalDeviceState)
